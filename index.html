@@ -307,9 +307,13 @@ function updateStatus(ok) {
         // --- 追加：NG発生時にLINEへ通知（Android用） ---
         sendNotification("【NG発生】かんばん照合で不一致が発生しました");
 
-        // --- 既存：NG発生時にショートカット通知を起動（iPhone用） ---
+// --- 既存：NG発生時にショートカット通知を起動（iPhone用） ---
+        const deviceName = localStorage.getItem("kb_v19_device_name") || "未設定端末";
+        const productName = activeMaster ? activeMaster.name : "製品未選択";
+        const shortcutMsg = `【${deviceName}】\n【NG発生】かんばん照合で不一致が発生しました\n(対象: ${productName})`;
+
         const shortcutName = encodeURIComponent("QR通知");
-        const text = encodeURIComponent("【NG発生】かんばん照合で不一致が発生しました");
+        const text = encodeURIComponent(shortcutMsg);
         // iOSショートカット起動（通信を優先させるため少し遅延）
         setTimeout(() => {
             window.location.href = `shortcuts://run-shortcut?name=${shortcutName}&input=text&text=${text}`;
@@ -494,9 +498,13 @@ function triggerIphoneShortcut(statusMessage) {
     // --- 追加：LINE通知を起動（Android用） ---
     sendNotification(statusMessage || "【呼び出し】管理者を呼んでいます");
 
-    // --- 既存：iPhoneショートカットを起動 ---
+// --- 既存：iPhoneショートカットを起動 ---
+    const deviceName = localStorage.getItem("kb_v19_device_name") || "未設定端末";
+    const productName = activeMaster ? activeMaster.name : "製品未選択";
+    const shortcutMsg = `【${deviceName}】\n${statusMessage || "管理者を呼んでいます"}\n(対象: ${productName})`;
+
     const shortcutName = encodeURIComponent("QR通知");
-    const text = encodeURIComponent(statusMessage || "管理者を呼んでいます");
+    const text = encodeURIComponent(shortcutMsg);
     // iOSショートカット起動（通信を優先させるため少し遅延）
     setTimeout(() => {
         window.location.href = `shortcuts://run-shortcut?name=${shortcutName}&input=text&text=${text}`;
