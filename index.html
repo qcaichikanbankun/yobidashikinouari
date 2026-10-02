@@ -317,7 +317,7 @@ function updateStatus(ok) {
         // iOSショートカット起動（通信を優先させるため少し遅延）
         setTimeout(() => {
             window.location.href = `shortcuts://run-shortcut?name=${shortcutName}&input=text&text=${text}`;
-        }, 100);
+        }, 150);
 
         setTimeout(() => {
             document.getElementById("lock-overlay").style.display = "flex";
