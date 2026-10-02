@@ -120,7 +120,7 @@
             <button class="btn-sub" style="width:100%; margin-bottom:10px; padding:15px; border:2px solid #007bff; background:#fff; color:#007bff; font-weight:bold;" onclick="setDeviceName()">📱 この端末の設置場所を設定する</button>
             
             <!-- ▼ パスワード変更ボタンを追加 ▼ -->
-            <button class="btn-sub" style="width:100%; margin-bottom:20px; padding:15px; border:2px solid #28a745; background:#fff; color:#28a745; font-weight:bold;" onclick="setDevicePassword()">🔑 解除パスワードを変更する</button>
+            <button class="btn-sub" style="width:100%; margin-bottom:20px; padding:15px; border:2px solid #28a745; background:#fff; color:#28a745; font-weight:bold;" onclick="()">🔑 解除パスワードを変更する</button>
 
             <div style="padding:15px;background:#eee;border-radius:15px;text-align:center;margin-bottom:20px;">
                 <canvas id="mini-canvas"></canvas>
@@ -537,12 +537,36 @@ function setDeviceName() {
 // 解除パスワードを設定して記憶する関数
 function setDevicePassword() {
     const currentPw = getDevicePassword();
-    const newPw = prompt("新しい管理者解除パスワードを入力してください。\n（初期設定: 8181）", currentPw);
     
-    if (newPw !== null && newPw.trim() !== "") {
-        localStorage.setItem("kb_v19_password", newPw.trim());
-        alert(`管理者解除パスワードを「${newPw.trim()}」に変更しました。`);
+    // ① 現在のパスワードを入力して確認
+    const inputCurrent = prompt("現在の管理者解除パスワードを入力してください。");
+    if (inputCurrent === null) return; // キャンセルされた場合は終了
+    
+    if (inputCurrent !== currentPw) {
+        alert("現在のパスワードが違います。変更はキャンセルされました。");
+        return;
     }
+    
+    // ② 新しいパスワードを入力
+    const newPw = prompt("新しい管理者解除パスワードを入力してください。");
+    if (newPw === null || newPw.trim() === "") {
+        alert("無効な入力です。変更はキャンセルされました。");
+        return;
+    }
+    
+    // ③ 確認のためもう一度入力
+    const confirmPw = prompt("確認のため、もう一度新しいパスワードを入力してください。");
+    if (confirmPw === null) return; // キャンセルされた場合は終了
+    
+    // ④ 新しいパスワードの照合
+    if (newPw !== confirmPw) {
+        alert("入力された新しいパスワードが一致しません。変更はキャンセルされました。");
+        return;
+    }
+    
+    // ⑤ すべてクリアしたら保存
+    localStorage.setItem("kb_v19_password", newPw.trim());
+    alert(`管理者解除パスワードを「${newPw.trim()}」に変更しました。`);
 }
 
 // LINEへWebhook通信を行う関数
